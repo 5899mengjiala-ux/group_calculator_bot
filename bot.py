@@ -33,7 +33,7 @@ def save_stats(stats):
 stats = load_stats()
 
 
-def ensure_chat_entry(chat_id: int, title: str):
+def ensure_chat_entry(chat_id, title):
     cid = str(chat_id)
     if cid not in stats:
         stats[cid] = {
@@ -53,7 +53,7 @@ def today_str():
     return datetime.now(TZ).strftime("%Y-%m-%d")
 
 
-def reset_if_new_day(cid: str, current_count: int | None = None):
+def reset_if_new_day(cid, current_count=None):
     today = today_str()
     chat_stats = stats.get(cid)
     if chat_stats.get("last_reset_date") != today:
@@ -66,7 +66,7 @@ def reset_if_new_day(cid: str, current_count: int | None = None):
         chat_stats["last_reset_date"] = today
 
 
-async def chat_member_update(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def chat_member_update(update, context):
     cmu = update.chat_member
     if cmu is None:
         return
@@ -108,7 +108,7 @@ async def chat_member_update(update: Update, context: ContextTypes.DEFAULT_TYPE)
     save_stats(stats)
 
 
-async def cmd_today(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def cmd_today(update, context):
     chat = update.effective_chat
     cid = str(chat.id)
 
@@ -129,7 +129,7 @@ async def cmd_today(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(msg)
 
 
-async def start_msg(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def start_msg(update, context):
     await update.message.reply_text(
         "🤖机器人已启动\n\n"
         "/today - 查询当前群今日进退人数"
